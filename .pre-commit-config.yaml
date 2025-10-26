@@ -13,7 +13,7 @@ repos:
         name: Terraform Formatter
       - id: terraform_trivy
         name: Terraform Trivy Security Scan
-        files: ^red-instance/.*\.tf$
+        files: ^red-network/.*\.tf$
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.20.0
     hooks:
@@ -25,7 +25,7 @@ repos:
             "table",
             "--output-file",
             "../README.md",
-            "red-instance/.",
+            "red-network/.",
           ]
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
