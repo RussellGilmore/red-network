@@ -41,7 +41,6 @@ No modules.
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/eip) | resource |
 | [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/nat_gateway) | resource |
-| [aws_route.private_nat](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/route) | resource |
 | [aws_route.public_internet](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/route) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/6.18.0/docs/resources/route_table) | resource |
