@@ -54,6 +54,10 @@ resource "aws_nat_gateway" "main" {
   depends_on = [aws_internet_gateway.main]
 }
 
+####################################################################################################
+# Route Tables
+####################################################################################################
+
 # Public Route Table (only if public subnets exist)
 resource "aws_route_table" "public" {
   count = local.has_public_subnets ? 1 : 0
@@ -76,4 +80,16 @@ resource "aws_route" "public_internet" {
   route_table_id         = aws_route_table.public[0].id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.main[0].id
+}
+
+####################################################################################################
+# Route Table Associations
+####################################################################################################
+
+# Associate public subnets with public route table
+resource "aws_route_table_association" "public" {
+  for_each = local.public_subnets
+
+  subnet_id      = aws_subnet.subnets[each.key].id
+  route_table_id = aws_route_table.public[0].id
 }

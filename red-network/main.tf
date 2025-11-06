@@ -51,30 +51,14 @@ resource "aws_subnet" "subnets" {
   )
 }
 
-####################################################################################################
-# Route Tables
-####################################################################################################
 
 
-####################################################################################################
-# Route Table Associations
-####################################################################################################
 
-# Associate public subnets with public route table
-resource "aws_route_table_association" "public" {
-  for_each = local.public_subnets
 
-  subnet_id      = aws_subnet.subnets[each.key].id
-  route_table_id = aws_route_table.public[0].id
-}
 
-# Associate private subnets with private route table
-resource "aws_route_table_association" "private" {
-  for_each = local.private_subnets
 
-  subnet_id      = aws_subnet.subnets[each.key].id
-  route_table_id = aws_route_table.private.id
-}
+
+
 
 ####################################################################################################
 # VPC Endpoints
