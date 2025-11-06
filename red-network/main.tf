@@ -7,7 +7,7 @@ provider "aws" {
   default_tags {
     tags = {
       Orchestrator = "Terraform"
-      Artifact     = "Red-Instance"
+      Artifact     = "Red-Network"
       Project      = var.project_name
     }
   }
@@ -50,15 +50,6 @@ resource "aws_subnet" "subnets" {
     }
   )
 }
-
-
-
-
-
-
-
-
-
 
 ####################################################################################################
 # VPC Endpoints
