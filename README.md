@@ -11,6 +11,8 @@ Trivy can be installed via Homebrew on macOS with the command:
 brew install aquasecurity/trivy/trivy
 ```
 
+## [![Red Network Module](https://github.com/RussellGilmore/red-network/actions/workflows/module-test.yml/badge.svg?branch=main)](https://github.com/RussellGilmore/red-network/actions/workflows/module-test.yml)
+
 A VPC Network module designed to be practical for casual use.
 
 ## Features
