@@ -8,13 +8,19 @@ variable "region" {
   type        = string
 }
 
+variable "additional_tags" {
+  description = "Additional tags to apply to resources."
+  type        = map(string)
+  default     = {}
+}
+
 module "red-network" {
-  source = "../red-network"
+  source = "../../red-network"
 
   project_name = var.project_name
   region       = var.region
-  vpc_name = "${var.project_name}-vpc"
-  vpc_cidr = "10.0.0.0/16"
+  vpc_name     = "${var.project_name}-vpc"
+  vpc_cidr     = "10.0.0.0/16"
 
   subnets = {
     public-1a = {

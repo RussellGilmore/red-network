@@ -11,34 +11,56 @@ import (
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-// TestDNSOnlyFeature tests the Red Instance with only DNS feature enabled
-func TestDeploy(t *testing.T) {
-	t.Parallel()
-
-	// Get the current AWS region from environment variable or use default
-	awsRegion := os.Getenv("AWS_REGION")
-	if awsRegion == "" {
-		awsRegion = "us-east-1"
-	}
-
-	// Generate a unique project name for the test
-	projectName := fmt.Sprintf("red-network-%s", strings.ToLower(random.UniqueId()))
-
-	terraformOptions := &terraform.Options{
-		TerraformDir: "./dns-only",
+var (
+	awsRegion   = os.Getenv("AWS_REGION")
+	projectName = fmt.Sprintf("red-network-%s", strings.ToLower(random.UniqueId()))
+	opts        = &terraform.Options{
+		TerraformDir: "./baseline",
 		Vars: map[string]interface{}{
 			"region":       awsRegion,
 			"project_name": projectName,
 		},
 	}
+)
 
-	// Clean up resources in the end
-	defer test_structure.RunTestStage(t, "teardown", func() {
-		terraform.Destroy(t, terraformOptions)
-	})
+// Destroy the terraform code
+func destroyTerraform(t *testing.T) {
+	terraform.Destroy(t, opts)
+}
+
+// A baseline deployment to ensure bare minimum functionality
+func testBaseline(t *testing.T) {
+	t.Parallel()
 
 	// Deploy using Terraform
 	test_structure.RunTestStage(t, "setup", func() {
-		terraform.InitAndApply(t, terraformOptions)
+		_, err := terraform.InitAndApplyE(t, opts)
+		if err != nil {
+			terraform.Apply(t, opts)
+		}
+	})
+
+	// Get Public and Private Subnet IDs
+	test_structure.RunTestStage(t, "validate", func() {
+		publicSubnetIDs := terraform.OutputList(t, opts, "public_subnet_ids")
+		privateSubnetIDs := terraform.OutputList(t, opts, "private_subnet_ids")
+
+		if len(publicSubnetIDs) != 2 {
+			t.Fatalf("Expected 2 public subnets, but got %d", len(publicSubnetIDs))
+		}
+
+		if len(privateSubnetIDs) != 2 {
+			t.Fatalf("Expected 2 private subnets, but got %d", len(privateSubnetIDs))
+		}
+	})
+}
+
+func TestRedNetwork(t *testing.T) {
+	defer test_structure.RunTestStage(t, "terraform_destroy", func() {
+		destroyTerraform(t)
+	})
+
+	test_structure.RunTestStage(t, "terraform_init_and_apply", func() {
+		testBaseline(t)
 	})
 }
