@@ -42,7 +42,7 @@ resource "aws_nat_gateway" "main" {
   count = local.has_public_subnets ? 1 : 0
 
   allocation_id = aws_eip.nat[0].id
-  subnet_id     = aws_subnet.subnets[local.first_public_subnet.name].id
+  subnet_id     = aws_subnet.subnets[local.first_public_subnet_key].id
 
   tags = merge(
     var.additional_tags,
