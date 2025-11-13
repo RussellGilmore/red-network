@@ -1,4 +1,4 @@
-# Contains the main resource block for creating the Red Instance
+# Contains the main resource block for creating the Red Network
 
 # Provider configuration with default tags
 provider "aws" {
@@ -13,10 +13,9 @@ provider "aws" {
   }
 }
 
-####################################################################################################
-# VPC
-####################################################################################################
-
+# Main VPC Resource
+# Justification: Flow logs add extra cost in development and testing environments.
+# trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
