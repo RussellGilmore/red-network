@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	awsRegion   = os.Getenv("AWS_REGION")
+	awsRegion   = getAWSRegion()
 	projectName = fmt.Sprintf("red-network-%s", strings.ToLower(random.UniqueId()))
 	opts        = &terraform.Options{
 		TerraformDir: "./baseline",
@@ -26,6 +26,18 @@ var (
 // Destroy the terraform code
 func destroyTerraform(t *testing.T) {
 	terraform.Destroy(t, opts)
+}
+
+// Helper function to get AWS region from multiple possible env vars and because I can't make up my mind
+func getAWSRegion() string {
+	region := os.Getenv("AWS_REGION")
+	if region == "" {
+		region = os.Getenv("AWS_DEFAULT_REGION")
+	}
+	if region == "" {
+		region = "us-east-1" // fallback default
+	}
+	return region
 }
 
 // A baseline deployment to ensure bare minimum functionality
