@@ -79,13 +79,13 @@ output "internet_gateway_id" {
 ####################################################################################################
 
 output "nat_gateway_id" {
-  description = "ID of the NAT Gateway (if public subnets exist)"
-  value       = local.has_public_subnets ? aws_nat_gateway.main[0].id : null
+  description = "ID of the NAT Gateway (if created — not present when using centralized NAT)"
+  value       = local.create_nat_gateway ? aws_nat_gateway.main[0].id : null
 }
 
 output "nat_gateway_public_ip" {
-  description = "Public IP address of the NAT Gateway (if public subnets exist)"
-  value       = local.has_public_subnets ? aws_eip.nat[0].public_ip : null
+  description = "Public IP address of the NAT Gateway (if created — not present when using centralized NAT)"
+  value       = local.create_nat_gateway ? aws_eip.nat[0].public_ip : null
 }
 
 ####################################################################################################
@@ -103,10 +103,34 @@ output "s3_vpc_endpoint_prefix_list_id" {
 }
 
 ####################################################################################################
+# Transit Gateway Outputs
+####################################################################################################
+
+output "transit_gateway_id" {
+  description = "ID of the Transit Gateway (if created)"
+  value       = var.create_transit_gateway ? aws_ec2_transit_gateway.main[0].id : null
+}
+
+output "transit_gateway_arn" {
+  description = "ARN of the Transit Gateway (if created)"
+  value       = var.create_transit_gateway ? aws_ec2_transit_gateway.main[0].arn : null
+}
+
+output "transit_gateway_attachment_id" {
+  description = "ID of the Transit Gateway VPC Attachment (if attached)"
+  value       = local.effective_attach_to_tgw ? aws_ec2_transit_gateway_vpc_attachment.main[0].id : null
+}
+
+####################################################################################################
 # Metadata Outputs
 ####################################################################################################
 
 output "has_public_subnets" {
   description = "Boolean indicating if the VPC has any public subnets"
   value       = local.has_public_subnets
+}
+
+output "using_centralized_nat" {
+  description = "Boolean indicating if this VPC uses centralized NAT via Transit Gateway"
+  value       = var.use_centralized_nat
 }
