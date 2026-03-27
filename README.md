@@ -40,10 +40,14 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [aws_ec2_transit_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/ec2_transit_gateway) | resource |
+| [aws_ec2_transit_gateway_vpc_attachment.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/ec2_transit_gateway_vpc_attachment) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/eip) | resource |
 | [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/nat_gateway) | resource |
+| [aws_route.private_tgw](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
 | [aws_route.public_internet](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
+| [aws_route.public_tgw](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table) | resource |
 | [aws_route_table_association.private](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table_association) | resource |
@@ -59,9 +63,16 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to apply to the resources | `map(string)` | `{}` | no |
+| <a name="input_attach_to_transit_gateway"></a> [attach\_to\_transit\_gateway](#input\_attach\_to\_transit\_gateway) | Whether to attach this VPC to a Transit Gateway | `bool` | `false` | no |
+| <a name="input_create_transit_gateway"></a> [create\_transit\_gateway](#input\_create\_transit\_gateway) | Whether to create a new Transit Gateway | `bool` | `false` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Set the appropriate AWS region. | `string` | n/a | yes |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | Map of subnets to create. Each subnet should specify name, cidr\_block, availability\_zone, and type (public/private) | <pre>map(object({<br/>    name              = string<br/>    cidr_block        = string<br/>    availability_zone = string<br/>    type              = string<br/>  }))</pre> | n/a | yes |
+| <a name="input_transit_gateway_asn"></a> [transit\_gateway\_asn](#input\_transit\_gateway\_asn) | Amazon side ASN for the Transit Gateway | `number` | `64512` | no |
+| <a name="input_transit_gateway_id"></a> [transit\_gateway\_id](#input\_transit\_gateway\_id) | ID of an existing Transit Gateway to attach to (required if attach\_to\_transit\_gateway is true and create\_transit\_gateway is false) | `string` | `""` | no |
+| <a name="input_transit_gateway_name"></a> [transit\_gateway\_name](#input\_transit\_gateway\_name) | Name for the Transit Gateway (only used if create\_transit\_gateway is true) | `string` | `""` | no |
+| <a name="input_transit_gateway_routes"></a> [transit\_gateway\_routes](#input\_transit\_gateway\_routes) | List of CIDR blocks to route through the Transit Gateway (e.g., other VPC CIDRs) | `list(string)` | `[]` | no |
+| <a name="input_use_centralized_nat"></a> [use\_centralized\_nat](#input\_use\_centralized\_nat) | If true, this VPC will NOT create its own NAT gateway. Instead, a default route (0.0.0.0/0) on private subnets will point to the Transit Gateway, expecting a hub VPC to provide NAT. Only applies when attach\_to\_transit\_gateway is true. | `bool` | `false` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | CIDR block for the VPC | `string` | n/a | yes |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | Name of the VPC | `string` | n/a | yes |
 

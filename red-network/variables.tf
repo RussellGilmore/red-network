@@ -56,3 +56,61 @@ variable "additional_tags" {
   type        = map(string)
   default     = {}
 }
+
+####################################################################################################
+# Transit Gateway Variables
+variable "create_transit_gateway" {
+  description = "Whether to create a new Transit Gateway"
+  type        = bool
+  default     = false
+}
+
+variable "transit_gateway_name" {
+  description = "Name for the Transit Gateway (only used if create_transit_gateway is true)"
+  type        = string
+  default     = ""
+}
+
+variable "transit_gateway_asn" {
+  description = "Amazon side ASN for the Transit Gateway"
+  type        = number
+  default     = 64512
+}
+
+variable "attach_to_transit_gateway" {
+  description = "Whether to attach this VPC to a Transit Gateway"
+  type        = bool
+  default     = false
+}
+
+variable "transit_gateway_id" {
+  description = "ID of an existing Transit Gateway to attach to (required if attach_to_transit_gateway is true and create_transit_gateway is false)"
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = var.transit_gateway_id == "" || can(regex("^tgw-", var.transit_gateway_id))
+    error_message = "Transit Gateway ID must start with 'tgw-' if provided."
+  }
+}
+
+variable "transit_gateway_routes" {
+  description = "List of CIDR blocks to route through the Transit Gateway (e.g., other VPC CIDRs)"
+  type        = list(string)
+  default     = []
+
+  validation {
+    condition = alltrue([
+      for cidr in var.transit_gateway_routes : can(cidrhost(cidr, 0))
+    ])
+    error_message = "All Transit Gateway route CIDR blocks must be valid IPv4 CIDR blocks."
+  }
+}
+
+####################################################################################################
+# Centralized NAT Variables
+variable "use_centralized_nat" {
+  description = "If true, this VPC will NOT create its own NAT gateway. Instead, a default route (0.0.0.0/0) on private subnets will point to the Transit Gateway, expecting a hub VPC to provide NAT. Only applies when attach_to_transit_gateway is true."
+  type        = bool
+  default     = false
+}
