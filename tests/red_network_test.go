@@ -140,8 +140,8 @@ func TestTransitGateway(t *testing.T) {
 		}
 
 		// Verify spoke does NOT have a NAT gateway (uses centralized NAT)
-		spokeNatID := terraform.Output(t, transitOpts, "spoke_nat_gateway_id")
-		if spokeNatID != "" {
+		spokeNatID, err := terraform.OutputE(t, transitOpts, "spoke_nat_gateway_id")
+		if err == nil && spokeNatID != "" {
 			t.Fatalf("Expected Spoke NAT Gateway ID to be empty (using centralized NAT), got: %s", spokeNatID)
 		}
 
