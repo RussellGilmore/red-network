@@ -39,15 +39,15 @@ A VPC Network module designed to be practical for casual use.
 ## Requirements
 
 | Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | 1.14.6 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 6.34.0 |
+| ---- | ------- |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.15.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.47.0 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 6.34.0 |
+| ---- | ------- |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.47.0 |
 
 ## Modules
 
@@ -56,31 +56,31 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
-| [aws_ec2_transit_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/ec2_transit_gateway) | resource |
-| [aws_ec2_transit_gateway_vpc_attachment.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/ec2_transit_gateway_vpc_attachment) | resource |
-| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/eip) | resource |
-| [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/internet_gateway) | resource |
-| [aws_nat_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/nat_gateway) | resource |
-| [aws_route.private_centralized_nat](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
-| [aws_route.private_nat](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
-| [aws_route.private_tgw](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
-| [aws_route.public_internet](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
-| [aws_route.public_tgw](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route) | resource |
-| [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table) | resource |
-| [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table) | resource |
-| [aws_route_table_association.private](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table_association) | resource |
-| [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/route_table_association) | resource |
-| [aws_subnet.subnets](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/subnet) | resource |
-| [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/vpc) | resource |
-| [aws_vpc_endpoint.s3](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/vpc_endpoint) | resource |
-| [aws_vpc_endpoint_route_table_association.s3_private](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/vpc_endpoint_route_table_association) | resource |
-| [aws_vpc_endpoint_route_table_association.s3_public](https://registry.terraform.io/providers/hashicorp/aws/6.34.0/docs/resources/vpc_endpoint_route_table_association) | resource |
+| ---- | ---- |
+| [aws_ec2_transit_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway) | resource |
+| [aws_ec2_transit_gateway_vpc_attachment.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) | resource |
+| [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
+| [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
+| [aws_nat_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
+| [aws_route.private_centralized_nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.private_nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.private_tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.public_internet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route.public_tgw](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
+| [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table) | resource |
+| [aws_route_table_association.private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table_association) | resource |
+| [aws_subnet.subnets](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/subnet) | resource |
+| [aws_vpc.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc) | resource |
+| [aws_vpc_endpoint.s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint) | resource |
+| [aws_vpc_endpoint_route_table_association.s3_private](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_route_table_association) | resource |
+| [aws_vpc_endpoint_route_table_association.s3_public](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc_endpoint_route_table_association) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to apply to the resources | `map(string)` | `{}` | no |
 | <a name="input_attach_to_transit_gateway"></a> [attach\_to\_transit\_gateway](#input\_attach\_to\_transit\_gateway) | Whether to attach this VPC to a Transit Gateway | `bool` | `false` | no |
 | <a name="input_create_transit_gateway"></a> [create\_transit\_gateway](#input\_create\_transit\_gateway) | Whether to create a new Transit Gateway | `bool` | `false` | no |
@@ -98,7 +98,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_has_public_subnets"></a> [has\_public\_subnets](#output\_has\_public\_subnets) | Boolean indicating if the VPC has any public subnets |
 | <a name="output_internet_gateway_id"></a> [internet\_gateway\_id](#output\_internet\_gateway\_id) | ID of the Internet Gateway (if public subnets exist) |
 | <a name="output_nat_gateway_id"></a> [nat\_gateway\_id](#output\_nat\_gateway\_id) | ID of the NAT Gateway (if created — not present when using centralized NAT) |
