@@ -11,7 +11,9 @@ locals {
 
   # Whether this VPC should create its own NAT gateway
   # Skipped when using centralized NAT (spoke VPCs route through TGW to hub NAT)
-  create_nat_gateway = local.has_public_subnets && !var.use_centralized_nat
+  # or when explicitly disabled via create_nat_gateway (public-only VPCs with no
+  # private egress needs, e.g. bastion/build hosts)
+  create_nat_gateway = local.has_public_subnets && !var.use_centralized_nat && var.create_nat_gateway
 
   # Determine whether to attach to a Transit Gateway
   # If creating a TGW, implicitly attach to it

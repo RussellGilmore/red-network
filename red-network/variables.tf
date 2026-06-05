@@ -114,3 +114,11 @@ variable "use_centralized_nat" {
   type        = bool
   default     = false
 }
+
+####################################################################################################
+# NAT Gateway Variables
+variable "create_nat_gateway" {
+  description = "Whether to create a NAT gateway for private subnet outbound internet access. Defaults to true (created when public subnets exist). Set to false for public-only VPCs (e.g. bastion or build hosts) that have no private subnets needing egress, avoiding the NAT gateway hourly + data processing cost. Ignored when use_centralized_nat is true."
+  type        = bool
+  default     = true
+}

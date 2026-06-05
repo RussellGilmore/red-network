@@ -83,6 +83,7 @@ No modules.
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_tags"></a> [additional\_tags](#input\_additional\_tags) | Additional tags to apply to the resources | `map(string)` | `{}` | no |
 | <a name="input_attach_to_transit_gateway"></a> [attach\_to\_transit\_gateway](#input\_attach\_to\_transit\_gateway) | Whether to attach this VPC to a Transit Gateway | `bool` | `false` | no |
+| <a name="input_create_nat_gateway"></a> [create\_nat\_gateway](#input\_create\_nat\_gateway) | Whether to create a NAT gateway for private subnet outbound internet access. Defaults to true (created when public subnets exist). Set to false for public-only VPCs (e.g. bastion or build hosts) that have no private subnets needing egress, avoiding the NAT gateway hourly + data processing cost. Ignored when use\_centralized\_nat is true. | `bool` | `true` | no |
 | <a name="input_create_transit_gateway"></a> [create\_transit\_gateway](#input\_create\_transit\_gateway) | Whether to create a new Transit Gateway | `bool` | `false` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Set the appropriate AWS region. | `string` | n/a | yes |

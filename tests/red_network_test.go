@@ -169,3 +169,75 @@ func TestTransitGateway(t *testing.T) {
 		}
 	})
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Public-Only VPC Test (create_nat_gateway = false)
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+func TestPublicOnlyVPC(t *testing.T) {
+	publicProjectName := fmt.Sprintf("red-public-%s", strings.ToLower(random.UniqueId()))
+
+	publicOpts := &terraform.Options{
+		TerraformDir: "./public-only",
+		Vars: map[string]interface{}{
+			"region":       awsRegion,
+			"project_name": publicProjectName,
+		},
+	}
+
+	// Always clean up
+	defer test_structure.RunTestStage(t, "terraform_destroy_public", func() {
+		terraform.Destroy(t, publicOpts)
+	})
+
+	// Deploy the public-only VPC
+	test_structure.RunTestStage(t, "terraform_init_and_apply_public", func() {
+		_, err := terraform.InitAndApplyE(t, publicOpts)
+		if err != nil {
+			terraform.Apply(t, publicOpts)
+		}
+	})
+
+	// Validate the public-only, no-NAT topology
+	test_structure.RunTestStage(t, "validate_public", func() {
+		// Exactly one public subnet
+		publicSubnetIDs := terraform.OutputList(t, publicOpts, "public_subnet_ids")
+		if len(publicSubnetIDs) != 1 {
+			t.Fatalf("Expected 1 public subnet, but got %d", len(publicSubnetIDs))
+		}
+
+		// No private subnets
+		privateSubnetIDs := terraform.OutputList(t, publicOpts, "private_subnet_ids")
+		if len(privateSubnetIDs) != 0 {
+			t.Fatalf("Expected 0 private subnets, but got %d", len(privateSubnetIDs))
+		}
+
+		// Internet Gateway must exist (public subnet needs egress/ingress)
+		igwID := terraform.Output(t, publicOpts, "internet_gateway_id")
+		if igwID == "" {
+			t.Fatal("Expected Internet Gateway ID to be non-empty")
+		}
+		if !strings.HasPrefix(igwID, "igw-") {
+			t.Fatalf("Expected Internet Gateway ID to start with 'igw-', got: %s", igwID)
+		}
+
+		// The core assertion: NO NAT gateway was created.
+		// outputs.tf returns null for these when create_nat_gateway = false,
+		// which terraform surfaces as an empty string.
+		natID, err := terraform.OutputE(t, publicOpts, "nat_gateway_id")
+		if err == nil && natID != "" {
+			t.Fatalf("Expected NAT Gateway ID to be empty (create_nat_gateway = false), got: %s", natID)
+		}
+
+		natIP, err := terraform.OutputE(t, publicOpts, "nat_gateway_public_ip")
+		if err == nil && natIP != "" {
+			t.Fatalf("Expected NAT Gateway public IP to be empty (create_nat_gateway = false), got: %s", natIP)
+		}
+
+		// Sanity: module still reports public subnets present
+		hasPublic := terraform.Output(t, publicOpts, "has_public_subnets")
+		if hasPublic != "true" {
+			t.Fatalf("Expected has_public_subnets to be true, got: %s", hasPublic)
+		}
+	})
+}
