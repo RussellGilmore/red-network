@@ -1,20 +1,7 @@
 # Contains the main resource block for creating the Red Network
 
-# Provider configuration with default tags
-provider "aws" {
-  region = var.region
-
-  default_tags {
-    tags = {
-      Orchestrator = "Terraform"
-      Artifact     = "Red-Network"
-      Project      = var.project_name
-    }
-  }
-}
-
 # Main VPC Resource
-# Justification: Flow logs add extra cost in development and testing environments.
+# Justification: Flow logs are available opt-in via var.enable_flow_logs.
 # trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
@@ -22,7 +9,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = var.vpc_name
     }
@@ -42,7 +29,7 @@ resource "aws_subnet" "subnets" {
   map_public_ip_on_launch = each.value.type == "public" ? true : false
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = each.value.name
       Type = each.value.type
@@ -57,10 +44,10 @@ resource "aws_subnet" "subnets" {
 # S3 VPC Endpoint (Gateway)
 resource "aws_vpc_endpoint" "s3" {
   vpc_id       = aws_vpc.main.id
-  service_name = "com.amazonaws.${var.region}.s3"
+  service_name = "com.amazonaws.${data.aws_region.current.region}.s3"
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-s3-endpoint"
     }

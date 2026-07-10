@@ -1,4 +1,16 @@
+data "aws_region" "current" {}
+
 locals {
+  # Tags applied to every resource this module creates.
+  tags = merge(
+    {
+      Orchestrator = "Terraform"
+      Artifact     = "Red-Network"
+      Project      = var.project_name
+    },
+    var.additional_tags
+  )
+
   # Detect if any public subnets exist
   has_public_subnets = length([for s in var.subnets : s if s.type == "public"]) > 0
 
@@ -10,13 +22,9 @@ locals {
   private_subnets = { for k, v in var.subnets : k => v if v.type == "private" }
 
   # Whether this VPC should create its own NAT gateway
-  # Skipped when using centralized NAT (spoke VPCs route through TGW to hub NAT)
-  # or when explicitly disabled via create_nat_gateway (public-only VPCs with no
-  # private egress needs, e.g. bastion/build hosts)
   create_nat_gateway = local.has_public_subnets && !var.use_centralized_nat && var.create_nat_gateway
 
   # Determine whether to attach to a Transit Gateway
-  # If creating a TGW, implicitly attach to it
   effective_attach_to_tgw = var.create_transit_gateway || var.attach_to_transit_gateway
 
   # Determine the effective TGW ID (either created or passed in)
