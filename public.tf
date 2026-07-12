@@ -8,7 +8,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-igw"
     }
@@ -25,7 +25,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-nat-eip"
     }
@@ -45,7 +45,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.subnets[local.first_public_subnet_key].id
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-nat"
     }
@@ -65,7 +65,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-public-rt"
       Type = "public"

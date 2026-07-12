@@ -12,7 +12,7 @@ resource "aws_ec2_transit_gateway" "main" {
   auto_accept_shared_attachments  = "disable"
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = var.transit_gateway_name != "" ? var.transit_gateway_name : "${var.vpc_name}-tgw"
     }
@@ -33,7 +33,7 @@ resource "aws_ec2_transit_gateway_vpc_attachment" "main" {
   dns_support = "enable"
 
   tags = merge(
-    var.additional_tags,
+    local.tags,
     {
       Name = "${var.vpc_name}-tgw-attachment"
     }
