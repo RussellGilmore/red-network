@@ -6,12 +6,17 @@ variable "project_name" {
 variable "region" {
   description = "Set the appropriate AWS region."
   type        = string
+  default     = "us-east-1"
 }
 
 variable "additional_tags" {
   description = "Additional tags to apply to resources."
   type        = map(string)
   default     = {}
+}
+
+provider "aws" {
+  region = var.region
 }
 
 ####################################################################################################
@@ -24,10 +29,9 @@ variable "additional_tags" {
 ####################################################################################################
 
 module "public-only-network" {
-  source = "../../red-network"
+  source = "../../"
 
   project_name = var.project_name
-  region       = var.region
   vpc_name     = "${var.project_name}-public-vpc"
   vpc_cidr     = "10.0.0.0/16"
 

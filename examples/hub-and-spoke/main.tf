@@ -6,6 +6,7 @@ variable "project_name" {
 variable "region" {
   description = "Set the appropriate AWS region."
   type        = string
+  default     = "us-east-1"
 }
 
 variable "additional_tags" {
@@ -14,15 +15,18 @@ variable "additional_tags" {
   default     = {}
 }
 
+provider "aws" {
+  region = var.region
+}
+
 ####################################################################################################
 # Hub VPC — Owns the Transit Gateway and provides shared NAT
 ####################################################################################################
 
 module "hub-network" {
-  source = "../../red-network"
+  source = "../../"
 
   project_name = var.project_name
-  region       = var.region
   vpc_name     = "${var.project_name}-hub-vpc"
   vpc_cidr     = "10.1.0.0/16"
 
@@ -61,10 +65,9 @@ module "hub-network" {
 ####################################################################################################
 
 module "spoke-network" {
-  source = "../../red-network"
+  source = "../.."
 
   project_name = var.project_name
-  region       = var.region
   vpc_name     = "${var.project_name}-spoke-vpc"
   vpc_cidr     = "10.2.0.0/16"
 
