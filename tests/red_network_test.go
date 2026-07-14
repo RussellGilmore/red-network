@@ -15,7 +15,7 @@ var (
 	awsRegion   = getAWSRegion()
 	projectName = fmt.Sprintf("red-network-%s", strings.ToLower(random.UniqueId()))
 	opts        = &terraform.Options{
-		TerraformDir: "./baseline",
+		TerraformDir: "../examples/complete",
 		Vars: map[string]interface{}{
 			"region":       awsRegion,
 			"project_name": projectName,
@@ -85,7 +85,7 @@ func TestTransitGateway(t *testing.T) {
 	transitProjectName := fmt.Sprintf("red-tgw-%s", strings.ToLower(random.UniqueId()))
 
 	transitOpts := &terraform.Options{
-		TerraformDir: "./transit",
+		TerraformDir: "../examples/hub-and-spoke",
 		Vars: map[string]interface{}{
 			"region":       awsRegion,
 			"project_name": transitProjectName,
@@ -178,7 +178,7 @@ func TestPublicOnlyVPC(t *testing.T) {
 	publicProjectName := fmt.Sprintf("red-public-%s", strings.ToLower(random.UniqueId()))
 
 	publicOpts := &terraform.Options{
-		TerraformDir: "./public-only",
+		TerraformDir: "../examples/public-only",
 		Vars: map[string]interface{}{
 			"region":       awsRegion,
 			"project_name": publicProjectName,
