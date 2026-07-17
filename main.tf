@@ -20,6 +20,10 @@ resource "aws_vpc" "main" {
 # Subnets
 ####################################################################################################
 
+# Justification: Public IP assignment is the defining behavior of a subnet the caller has
+# explicitly declared as type = "public"; private subnets receive false.
+# The caller controls which subnets are public via var.subnets.
+# trivy:ignore:AVD-AWS-0164
 resource "aws_subnet" "subnets" {
   for_each = var.subnets
 
