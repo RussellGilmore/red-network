@@ -57,9 +57,13 @@ No modules.
 
 | Name | Type |
 | ---- | ---- |
+| [aws_cloudwatch_log_group.flow_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_ec2_transit_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway) | resource |
 | [aws_ec2_transit_gateway_vpc_attachment.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_vpc_attachment) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
+| [aws_flow_log.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log) | resource |
+| [aws_iam_role.flow_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy.flow_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) | resource |
 | [aws_internet_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/nat_gateway) | resource |
 | [aws_route.private_centralized_nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -86,6 +90,10 @@ No modules.
 | <a name="input_attach_to_transit_gateway"></a> [attach\_to\_transit\_gateway](#input\_attach\_to\_transit\_gateway) | Whether to attach this VPC to a Transit Gateway | `bool` | `false` | no |
 | <a name="input_create_nat_gateway"></a> [create\_nat\_gateway](#input\_create\_nat\_gateway) | Whether to create a NAT gateway for private subnet outbound internet access. Defaults to true (created when public subnets exist). Set to false for public-only VPCs (e.g. bastion or build hosts) that have no private subnets needing egress, avoiding the NAT gateway hourly + data processing cost. Ignored when use\_centralized\_nat is true. | `bool` | `true` | no |
 | <a name="input_create_transit_gateway"></a> [create\_transit\_gateway](#input\_create\_transit\_gateway) | Whether to create a new Transit Gateway | `bool` | `false` | no |
+| <a name="input_enable_flow_logs"></a> [enable\_flow\_logs](#input\_enable\_flow\_logs) | Enable VPC Flow Logs to CloudWatch. When true, the module creates a CloudWatch log group, an IAM role, and the flow log itself. | `bool` | `false` | no |
+| <a name="input_flow_logs_log_group_name"></a> [flow\_logs\_log\_group\_name](#input\_flow\_logs\_log\_group\_name) | Name of the CloudWatch log group for VPC flow logs. When empty, defaults to /aws/vpc-flow-logs/<vpc\_name>. Only used when enable\_flow\_logs is true. | `string` | `""` | no |
+| <a name="input_flow_logs_retention_days"></a> [flow\_logs\_retention\_days](#input\_flow\_logs\_retention\_days) | Retention period in days for the flow logs CloudWatch log group. Only used when enable\_flow\_logs is true. | `number` | `30` | no |
+| <a name="input_flow_logs_traffic_type"></a> [flow\_logs\_traffic\_type](#input\_flow\_logs\_traffic\_type) | Type of traffic to capture in flow logs: ALL, ACCEPT, or REJECT. | `string` | `"ALL"` | no |
 | <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Set the project name. | `string` | n/a | yes |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | Map of subnets to create. Each subnet should specify name, cidr\_block, availability\_zone, and type (public/private) | <pre>map(object({<br/>    name              = string<br/>    cidr_block        = string<br/>    availability_zone = string<br/>    type              = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_transit_gateway_asn"></a> [transit\_gateway\_asn](#input\_transit\_gateway\_asn) | Amazon side ASN for the Transit Gateway | `number` | `64512` | no |

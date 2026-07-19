@@ -117,3 +117,34 @@ variable "create_nat_gateway" {
   type        = bool
   default     = true
 }
+
+####################################################################################################
+# VPC Flow Logs Variables
+variable "enable_flow_logs" {
+  description = "Enable VPC Flow Logs to CloudWatch. When true, the module creates a CloudWatch log group, an IAM role, and the flow log itself."
+  type        = bool
+  default     = false
+}
+
+variable "flow_logs_log_group_name" {
+  description = "Name of the CloudWatch log group for VPC flow logs. When empty, defaults to /aws/vpc-flow-logs/<vpc_name>. Only used when enable_flow_logs is true."
+  type        = string
+  default     = ""
+}
+
+variable "flow_logs_retention_days" {
+  description = "Retention period in days for the flow logs CloudWatch log group. Only used when enable_flow_logs is true."
+  type        = number
+  default     = 30
+}
+
+variable "flow_logs_traffic_type" {
+  description = "Type of traffic to capture in flow logs: ALL, ACCEPT, or REJECT."
+  type        = string
+  default     = "ALL"
+
+  validation {
+    condition     = contains(["ALL", "ACCEPT", "REJECT"], var.flow_logs_traffic_type)
+    error_message = "flow_logs_traffic_type must be one of: ALL, ACCEPT, REJECT."
+  }
+}
