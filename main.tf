@@ -1,7 +1,9 @@
 # Contains the main resource block for creating the Red Network
 
 # Main VPC Resource
-# Justification: Flow logs are available opt-in via var.enable_flow_logs.
+# Justification: Flow logs are available opt-in via var.enable_flow_logs. When disabled
+# (the default), no flow log is created and this finding is accepted for
+# the module's baseline networking role.
 # trivy:ignore:AVD-AWS-0178
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr

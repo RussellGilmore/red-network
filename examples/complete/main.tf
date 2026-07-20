@@ -15,9 +15,11 @@ provider "aws" {
 module "red_network" {
   source = "../../"
 
-  project_name = var.project_name
-  vpc_name     = "${var.project_name}-vpc"
-  vpc_cidr     = "10.0.0.0/16"
+  project_name             = var.project_name
+  vpc_name                 = "${var.project_name}-vpc"
+  vpc_cidr                 = "10.0.0.0/16"
+  enable_flow_logs         = true
+  flow_logs_retention_days = 30
 
   subnets = {
     public-1a = {
@@ -61,4 +63,8 @@ output "private_subnet_ids" {
 
 output "nat_gateway_ip" {
   value = module.red_network.nat_gateway_public_ip
+}
+
+output "flow_logs_enabled" {
+  value = true
 }
