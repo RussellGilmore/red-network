@@ -64,6 +64,15 @@ func testBaseline(t *testing.T) {
 		if len(privateSubnetIDs) != 2 {
 			t.Fatalf("Expected 2 private subnets, but got %d", len(privateSubnetIDs))
 		}
+
+		// Verify flow logs were actually created (example sets enable_flow_logs = true)
+		flowLogID := terraform.Output(t, opts, "flow_log_id")
+		if flowLogID == "" {
+			t.Fatal("Expected a flow log ID, but got empty (flow logs should be enabled)")
+		}
+		if !strings.HasPrefix(flowLogID, "fl-") {
+			t.Fatalf("Expected flow log ID to start with 'fl-', got: %s", flowLogID)
+		}
 	})
 }
 

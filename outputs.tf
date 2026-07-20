@@ -134,3 +134,17 @@ output "using_centralized_nat" {
   description = "Boolean indicating if this VPC uses centralized NAT via Transit Gateway"
   value       = var.use_centralized_nat
 }
+
+####################################################################################################
+# Flow Logs Outputs
+####################################################################################################
+
+output "flow_log_id" {
+  description = "ID of the VPC Flow Log (if enabled)"
+  value       = var.enable_flow_logs ? aws_flow_log.main[0].id : null
+}
+
+output "flow_logs_log_group_name" {
+  description = "Name of the CloudWatch log group receiving flow logs (if enabled)"
+  value       = var.enable_flow_logs ? aws_cloudwatch_log_group.flow_logs[0].name : null
+}

@@ -65,6 +65,6 @@ output "nat_gateway_ip" {
   value = module.red_network.nat_gateway_public_ip
 }
 
-output "flow_logs_enabled" {
-  value = true
+output "flow_log_id" {
+  value = module.red_network.flow_log_id
 }
