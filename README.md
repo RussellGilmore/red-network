@@ -13,26 +13,99 @@ Trivy can be installed via Homebrew on macOS with the command:
 brew install aquasecurity/trivy/trivy
 ```
 
-A VPC Network module designed to be practical for casual use.
+A practical AWS VPC module with first-class support for hub-and-spoke
+topologies and **centralized NAT** — share one NAT gateway across many VPCs
+via a Transit Gateway instead of paying for one per VPC.
+
+## Why this module
+
+Most VPC modules stop at "make me a VPC." Red Network goes further: spoke
+VPCs can skip their own NAT gateway entirely and route outbound traffic
+through a hub VPC's shared NAT over a Transit Gateway. At roughly $32/month
+per NAT gateway, that difference adds up fast once you have more than one
+VPC.
+
+## Security posture
+
+- Public IP assignment is scoped to subnets you explicitly declare as
+  `type = "public"`; private subnets never auto-assign
+- VPC Flow Logs are available opt-in via `enable_flow_logs` (CloudWatch,
+  configurable retention and traffic type) — off by default to avoid
+  imposing cost, on when you want the visibility
+- An S3 Gateway VPC Endpoint keeps S3 traffic off the public internet
+- Scanned with Trivy and gitleaks on every commit; integration-tested with
+  Terratest across baseline, hub-and-spoke, and public-only topologies
 
 ## Features
 
--   VPC with DNS hostname and DNS resolution support
--   Flexible subnet configuration via a single map variable (public, private, or
-    both)
--   Internet Gateway provisioned automatically when public subnets exist
--   NAT Gateway with Elastic IP for private subnet outbound internet access
--   S3 Gateway VPC Endpoint with route table associations
--   Optional Transit Gateway creation for hub-and-spoke network topologies
--   Optional Transit Gateway VPC attachment with automatic private subnet
-    selection
--   Cross-VPC routing via configurable CIDR-based Transit Gateway routes on both
-    public and private route tables
--   Centralized NAT gateway sharing — spoke VPCs can skip local NAT and route
-    outbound internet traffic through a hub VPC's NAT via the Transit Gateway
--   Trivy security scanning via pre-commit hooks
--   Terratest integration tests for baseline and transit gateway deployments
--   Configurable tags with default project and orchestrator metadata
+- VPC with DNS hostnames and resolution
+- Flexible subnet layout via a single `subnets` map (public, private, or both)
+- Internet Gateway provisioned automatically when public subnets exist
+- NAT Gateway with Elastic IP for private subnet egress, or skip it entirely
+  with `create_nat_gateway = false` for public-only VPCs (no NAT cost)
+- S3 Gateway VPC Endpoint with route table associations
+- Optional Transit Gateway creation for hub-and-spoke topologies
+- Optional Transit Gateway attachment with automatic private-subnet selection
+- Cross-VPC routing via configurable CIDR-based Transit Gateway routes
+- Centralized NAT — spoke VPCs route outbound traffic through a hub VPC's
+  shared NAT via the Transit Gateway
+- Opt-in VPC Flow Logs to CloudWatch
+- Configurable tags with project and orchestrator metadata
+
+## Usage
+
+A VPC with public and private subnets — see
+[`examples/complete`](./examples/complete):
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+module "network" {
+  source = "RussellGilmore/red-network/aws"
+
+  project_name = "my-project"
+  vpc_name     = "my-project-vpc"
+  vpc_cidr     = "10.0.0.0/16"
+
+  subnets = {
+    public-1a = {
+      name              = "public-1a"
+      cidr_block        = "10.0.1.0/24"
+      availability_zone = "us-east-1a"
+      type              = "public"
+    }
+    private-1a = {
+      name              = "private-1a"
+      cidr_block        = "10.0.11.0/24"
+      availability_zone = "us-east-1a"
+      type              = "private"
+    }
+  }
+}
+```
+
+### Hub-and-spoke with centralized NAT
+
+The hub owns the Transit Gateway and a NAT gateway; each spoke attaches to
+the hub's TGW and sets `use_centralized_nat = true` to route its private
+subnets' outbound traffic through the hub instead of provisioning its own
+NAT. See [`examples/hub-and-spoke`](./examples/hub-and-spoke) for the full
+two-VPC configuration.
+
+### Public-only VPC (no NAT cost)
+
+For bastion or build hosts that only need an Internet Gateway and no private
+egress, set `create_nat_gateway = false` to skip the NAT gateway entirely.
+See [`examples/public-only`](./examples/public-only).
+
+### VPC Flow Logs
+
+Set `enable_flow_logs = true` to capture flow logs to CloudWatch. The module
+creates the log group, IAM role, and flow log for you; retention
+(`flow_logs_retention_days`), traffic type (`flow_logs_traffic_type`), and
+log group name (`flow_logs_log_group_name`) are all configurable.
 
 <!-- prettier-ignore-start -->
 <!-- BEGIN_TF_DOCS -->
